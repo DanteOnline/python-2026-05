@@ -7,14 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog_app', '0004_comment'),
+        ("blog_app", "0004_comment"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='comment',
-            name='post',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='blog_app.post'),
+            model_name="comment",
+            name="post",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="comments",
+                to="blog_app.post",
+            ),
             preserve_default=False,
         ),
     ]

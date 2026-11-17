@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog_app', '0002_post_author'),
+        ("blog_app", "0002_post_author"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='post',
-            name='rating',
+            model_name="post",
+            name="rating",
             field=models.IntegerField(default=0),
         ),
     ]

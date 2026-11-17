@@ -1,19 +1,25 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.shortcuts import render
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from blog_app.models import Post
+from .forms import PostModelForm
 
-from .forms import PostModelForm, PostDeleteForm
-from blog_app.models import Post, Author
 
 
 def index(request):
-    return render(request, 'blog_app/index.html')
+    return render(request, "blog_app/index.html")
 
 
 def about(request):
-    return render(request, 'blog_app/about.html')
+    return render(request, "blog_app/about.html")
 
 
 class PostBase:
@@ -22,15 +28,16 @@ class PostBase:
 
 class PostListView(PostBase, ListView):
     """Представление для отображения списка постов."""
+
     # model = Post
     # template_name = 'blog_app/post_list.html'
-    context_object_name = 'posts'
+    context_object_name = "posts"
 
     def get_queryset(self):
         queryset = super().get_queryset()
 
-        author_id = self.request.GET.get('name')
-        min_rating = self.request.GET.get('rating')
+        author_id = self.request.GET.get("name")
+        min_rating = self.request.GET.get("rating")
 
         if author_id:
             queryset = queryset.filter(author__id=author_id)
@@ -42,7 +49,7 @@ class PostListView(PostBase, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Все посты'
+        context["title"] = "Все посты"
         return context
 
 
@@ -57,6 +64,7 @@ class PostListView(PostBase, ListView):
 
 class PostDetailView(LoginRequiredMixin, PostBase, DetailView):
     """Представлени для отображения деталей поста."""
+
     # model = Post
     # context_object_name = 'post'
     # template_name = 'blog_app/post_detail.html'
@@ -64,8 +72,8 @@ class PostDetailView(LoginRequiredMixin, PostBase, DetailView):
     def get(self, request, *args, **kwargs):
         post = self.get_object()
         # post.rating += 1
-        post.rating = getattr(post, 'rating', 0) + 1
-        post.save(update_fields=['rating'])
+        post.rating = getattr(post, "rating", 0) + 1
+        post.save(update_fields=["rating"])
         return super().get(request, *args, **kwargs)
 
 
@@ -83,20 +91,21 @@ class PostDetailView(LoginRequiredMixin, PostBase, DetailView):
 
 class PostCreateView(LoginRequiredMixin, PostBase, CreateView):
     """Представление для создания поста."""
+
     # model = Post
     # template_name = 'blog_app/post_form.html'
     form_class = PostModelForm
-    success_url = reverse_lazy('post_list')
+    success_url = reverse_lazy("post_list")
 
-    def form_valid(self, form):
+    def form_valid(self, form):  # pylint:disable=useless-parent-delegation
         # pass
         # message.success
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Добавить пост'
-        context['button_name'] = 'Создать'
+        context["title"] = "Добавить пост"
+        context["button_name"] = "Создать"
         return context
 
 
@@ -119,15 +128,16 @@ class PostCreateView(LoginRequiredMixin, PostBase, CreateView):
 
 class PostUpdateView(LoginRequiredMixin, PostBase, UpdateView):
     """Представление для обновления поста."""
+
     # model = Post
     # template_name = 'blog_app/post_form.html'
     form_class = PostModelForm
-    success_url = reverse_lazy('post_list')
+    success_url = reverse_lazy("post_list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Изменить пост'
-        context['button_name'] = 'Изменить'
+        context["title"] = "Изменить пост"
+        context["button_name"] = "Изменить"
         return context
 
 
@@ -153,9 +163,10 @@ class PostUpdateView(LoginRequiredMixin, PostBase, UpdateView):
 
 class PostDeleteView(LoginRequiredMixin, PostBase, DeleteView):
     """Представление для удаления поста."""
+
     # model = Post
-    template_name = 'blog_app/post_delete.html'
-    success_url = reverse_lazy('post_list')
+    template_name = "blog_app/post_delete.html"
+    success_url = reverse_lazy("post_list")
 
 
 # def post_delete(request, post_id):
@@ -178,5 +189,3 @@ class PostDeleteView(LoginRequiredMixin, PostBase, DeleteView):
 #         'button_name': 'Удалить'
 #     }
 #     return render(request, 'blog_app/post_delete.html', context=context)
-
-

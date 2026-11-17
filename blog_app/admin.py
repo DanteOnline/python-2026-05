@@ -5,10 +5,19 @@ from .models import Post, Comment, Author, AuthorProfile, Tag
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title_list', 'author', 'rating', 'created_at', "tag_list")
-    ordering = ('-rating', 'created_at',)
-    list_filter = ('rating', 'author',)
-    search_fields = ('title', 'content',)
+    list_display = ("title_list", "author", "rating", "created_at", "tag_list")
+    ordering = (
+        "-rating",
+        "created_at",
+    )
+    list_filter = (
+        "rating",
+        "author",
+    )
+    search_fields = (
+        "title",
+        "content",
+    )
     search_help_text = "Введите часть заголовка или текса"
 
     # fields = ('title', 'rating', 'author', 'content',  'tags')
@@ -16,13 +25,11 @@ class PostAdmin(admin.ModelAdmin):
 
     fieldsets = (
         # (None, {
-        ("Главная информация", {
-            'fields': ('title', 'rating')
-        }),
-        ("Дополнительная информация", {
-            'fields': ('author', 'content', 'tags'),
-            'classes': ('collapse',)
-        })
+        ("Главная информация", {"fields": ("title", "rating")}),
+        (
+            "Дополнительная информация",
+            {"fields": ("author", "content", "tags"), "classes": ("collapse",)},
+        ),
     )
 
     def title_list(self, obj: Post):
@@ -32,7 +39,7 @@ class PostAdmin(admin.ModelAdmin):
         return ", ".join(tag.name for tag in obj.tags.all())
         # return "111"
 
-    tag_list.short_description = 'Tags'
+    tag_list.short_description = "Tags"
 
     @admin.action(description="Увеличить рейтинг поста")
     def add_rating(self, request, queryset):
@@ -45,7 +52,7 @@ class PostAdmin(admin.ModelAdmin):
 
 
 class AuthorAdmin(admin.ModelAdmin):
-    ordering = ('name',)
+    ordering = ("name",)
 
 
 @admin.register(Tag)
@@ -55,10 +62,13 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('author', 'post', 'created_at')
-    ordering = ('author', 'created_at',)
-    list_filter = ('author',)
-    search_fields = ('text',)
+    list_display = ("author", "post", "created_at")
+    ordering = (
+        "author",
+        "created_at",
+    )
+    list_filter = ("author",)
+    search_fields = ("text",)
     search_help_text = "Введите часть  текса"
 
 

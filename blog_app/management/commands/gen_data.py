@@ -1,7 +1,6 @@
-from django.core.management.base import BaseCommand
 import random
 from faker import Faker
-
+from django.core.management.base import BaseCommand
 from blog_app.models import Post, Author, Comment, Tag, AuthorProfile
 
 
@@ -31,13 +30,10 @@ class Command(BaseCommand):
         tags = []
 
         for i in range(random.randint(10, 20)):
-            tag = Tag.objects.create(
-                name=faker.word()
-            )
+            tag = Tag.objects.create(name=faker.word())
 
             tags.append(tag)
         self.stdout.write(f"Закончили создание {len(tags)} тэгов.")
-
 
         # Генерация постов
         posts = []
@@ -45,13 +41,11 @@ class Command(BaseCommand):
         for _ in range(random.randint(10, 15)):
             tag_post = random.sample(tags, random.randint(1, 5))
 
-
             post = Post.objects.create(
                 title=faker.sentence(nb_words=random.randint(3, 10)),
                 author=random.choice(authors),
                 content=faker.text(max_nb_chars=random.randint(300, 700)),
                 rating=random.randint(1, 10),
-
             )
             post.tags.add(*tag_post)
             posts.append(post)
@@ -68,8 +62,5 @@ class Command(BaseCommand):
             )
             comments.append(comment)
         self.stdout.write(f"Закончили создание {len(comments)} комментариев.")
-
-
-
 
         self.stdout.write("Закончили генерацию данных.")
